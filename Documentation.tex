@@ -1,0 +1,253 @@
+%        File: Documentation.tex
+%     Created: Wed Feb 03 11:00 AM 2021 S
+% Last Change: Wed Feb 03 11:00 AM 2021 S
+%
+\documentclass[a4paper]{report}
+% \usepackage[hidelinks]{hyperref}
+
+\usepackage{spverbatim}
+
+\usepackage{setspace}
+\usepackage{listings}
+\usepackage{color}
+\definecolor{lightgray}{rgb}{.9,.9,.9}
+\definecolor{darkgray}{rgb}{.4,.4,.4}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+
+\lstdefinelanguage{JavaScript}{
+  keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywords={class, export, boolean, throw, implements, import, this},
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{black}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{
+   language=JavaScript,
+   backgroundcolor=\color{lightgray},
+   extendedchars=true,
+   basicstyle=\footnotesize\ttfamily,
+   showstringspaces=false,
+   showspaces=false,
+   numbers=left,
+   numberstyle=\footnotesize,
+   numbersep=9pt,
+   tabsize=2,
+   breaklines=true,
+   showtabs=false,
+   captionpos=b
+}
+
+% \usepackage{blindtext}
+\title{Documentation of Back-end Application for Unilabo Website}
+\author{Scriptpainter}
+
+\begin{document}
+\maketitle
+% \linespread{1.5}
+\onehalfspacing
+
+\tableofcontents
+\newpage
+
+\chapter{Endpoints}
+
+Aplikasi back-end untuk halaman web aplikasi Unilabo dikembangkan dalam bentuk API (\textit{Application Programming Interface}) dengan menggunakan teknologi Node.js dan framework Express.js serta menggunakan MongoDB sebagai \textit{database}. Daftar API dapat dilihat secara detail sebagai berikut.
+
+\section{Focal Point}
+\subsection{Post Focal Point}
+Interface ini digunakan untuk melakukan \textit{post} deskripsi dan \textit{upload} gambar untuk \textit{Focal Point}. Hasil upload untuk sementara disimpan dalam folder \spverb|temp_uploadedfiles|.
+\begin{itemize}
+  \item URL: \verb|localhost/api/v1/focal-point/post| 
+  \item Method: \textbf{POST} 
+  \item \textbf{Input}: Form-Data; description (string), \verb|url_banner| (string)
+    \begin{lstlisting}
+{
+  "description": "Test Post",
+  "url_banner": "RobloxScreenShot20210103_192746586.png"
+}
+    \end{lstlisting}
+  \item \textbf{Result}:
+    \begin{lstlisting}
+{
+  "_id": "601ab6044926f93198d6f830",
+  "description": "Test Post",
+  "url_banner": "temp_uploadedfiles\\1612363268277-RobloxScreenShot20210103_192746586.png",
+  "createdAt": "2021-02-03T14:41:08.329Z",
+  "updatedAt": "2021-02-03T14:41:08.329Z",
+  "__v": 0
+}
+    \end{lstlisting}
+
+\end{itemize}
+                    
+\subsection{Update Focal Point (Single) }
+Interface berikut ini digunakan untuk melakukan update deskripsi dan/atau gambar untuk \textit{Focal Point}. File yang di-upload untuk sementara disimpan ke dalam folder sementara \verb|temp_uploadedfiles|.
+\begin{itemize}
+  \item \textbf{URL}: \verb|localhost/api/v1/focal-point/update|
+  \item \textbf{Method}: \textbf{POST} 
+  \item \textbf{Input}: Form-Data - \verb|_id| (string), description (string, optional), \verb|url_banner| (file.jpg/file.png)
+    \begin{lstlisting}
+{
+  "_id": "601ab6044926f93198d6f830",
+  "description": "test update",
+  "url_banner": "robloxScreenShot20210103_152510171.png"
+}
+    \end{lstlisting}
+  \item \textbf{Result}:
+    \begin{lstlisting}
+{
+  "_id": "601ab6044926f93198d6f830",
+  "description": "Test Update",
+  "url_banner": "temp_uploadedfiles\\1612363686974-RobloxScreenShot20210103_152510171.png",
+  "createdAt": "2021-02-03T14:41:08.329Z",
+  "updatedAt": "2021-02-03T14:48:07.008Z",
+  "__v": 0
+}
+    \end{lstlisting}
+\end{itemize}
+
+\subsection{Get One Focal Point}
+Interface ini digunakan untuk mengambil satu data \textit{Focal Point} menggunakan parameter \verb|id| yang diambil dari \textit{property} \verb|_id|.
+\begin{itemize}
+  \item \textbf{URL}: \verb|localhost/api/v1/focal-point/get/:id| 
+  \item \textbf{Method}: POST
+  \item \textbf{Input}: Parameter - id (string)
+    \begin{lstlisting}
+localhost:3000/api/v1/focal-point/get/601ab6044926f93198d6f830
+    \end{lstlisting}
+  \item \textbf{Result}:
+    \begin{lstlisting}
+{
+  "_id": "601ab6044926f93198d6f830",
+  "description": "Test Update",
+  "url_banner": "temp_uploadedfiles\\1612363686974-RobloxScreenShot20210103_152510171.png",
+  "createdAt": "2021-02-03T14:41:08.329Z",
+  "updatedAt": "2021-02-03T14:48:07.008Z",
+  "__v": 0
+}
+    \end{lstlisting}
+\end{itemize}
+\section{Thank You Page}
+ 
+\subsection{Load "Thank You" Page}
+Interface ini digunakan untuk membuka halaman \textit{Thank You} yang dilakukan oleh \textit{external user/customer} dengan menggunakan URL yang telah di-generate oleh \textit{internal user}.
+\begin{itemize}
+  \item \textbf{URL}: \verb|localhost/api/v1/thank-you/:id| 
+  \item \textbf{Method}: GET
+  \item \textbf{Input}: URL Parameter - \verb|id|.
+    \begin{lstlisting}
+{
+  localhost:3000/api/v1/thank-you/601aec6d95e43d652cd46177
+}
+    \end{lstlisting}
+  \item \textbf{Result}:
+    \begin{lstlisting}
+{
+  "is_submitted": 0,
+  "_id": "601aec6d95e43d652cd46177",
+  "email": "user@mail.com",
+  "createdAt": "2021-02-03T18:33:17.616Z",
+  "updatedAt": "2021-02-03T18:35:48.254Z",
+  "__v": 0
+}
+    \end{lstlisting}
+\end{itemize}
+
+\subsection{User Submission}
+Interface ini digunakan untuk melakukan proses \textit{submit} oleh \textit{external user/consumer} pada halaman \textit{Thank You}.
+\begin{itemize}
+  \item \textbf{URL}: \verb|localhost/api/v1/thank-you/submit| 
+  \item \textbf{Method}: POST
+  \item \textbf{Input}: JSON - \verb|_id| (string), email (string), \verb|phone_number| (string)
+    \begin{lstlisting}
+{
+  "_id": "601aec6d95e43d652cd46177",
+  "email": "user@mail.com",
+  "phone_number" : "081212349876"
+}
+    \end{lstlisting}
+  \item \textbf{Result}:
+    \begin{lstlisting}
+{
+  "_id": "601aec6d95e43d652cd46177",
+  "email": "user@mail.com",
+  "phone_number" : "081212349876"
+}
+    \end{lstlisting}
+\end{itemize}
+         
+\subsection{Get All Submission}
+Interface ini berfungsi untuk mengambil semua data \textit{user submission}.
+\begin{itemize}
+  \item \textbf{URL}: \verb|localhost/api/v1/thank-you/get-all|
+  \item \textbf{Method}: GET
+  \item \textbf{Input}: -
+  \item \textbf{Result}:
+    \begin{lstlisting}
+[
+  {
+    "is_submitted": 1,
+    "_id": "601aec6d95e43d652cd46177",
+    "email": "user@mail.com",
+    "createdAt": "2021-02-03T18:33:17.616Z",
+    "updatedAt": "2021-02-03T18:35:48.254Z",
+    "__v": 0
+  }
+]
+    \end{lstlisting}
+\end{itemize}
+\subsection{Generate URL (Single)}
+          Interface ini berfungsi untuk melakukan \textit{generate} URL halaman Thank You untuk satu user. \\ \\
+          URL: \verb|localhost/api/v1/thank-you/generate-url| \\
+          Method: POST
+\subsection{Generate URL (Multiple)}
+
+
+\section{User Management}
+      % user management
+\subsection{User Registration}
+          Interface ini berfungsi untuk mendaftarkan user dengan mengisi nama, email, dan password. \\ \\
+          URL: \verb|localhost/api/v1/user/register| \\
+          Method: POST \\
+          \textbf{Input}: JSON - name (string), email (string), password (string)
+            \begin{lstlisting}
+{
+    "name": "Administrator",
+    "email": "admin@unilabo.com",
+    "password": "password"
+}
+            \end{lstlisting}
+                    \textbf{Result}: 
+            \begin{lstlisting}[language=TeX]
+{
+  "data": {
+      "_id": "601a57910919825394e747a8",
+      "name": "Administrator",
+      "email": "admin@unilabo.com",
+      "password": "$2a$09$2Jj0yxpUofPoKeZWvBBKweoF6JOm4ImlBXGv8zq54T7WvwNueiTyy",
+      "tokens": [],
+      "createdAt": "2021-02-03T07:58:09.992Z",
+      "updatedAt": "2021-02-03T07:58:09.992Z",
+      "__v": 0
+  }
+}
+            \end{lstlisting}
+            \subsection{User Login}
+          \textbf{Input}: JSON - email (string), password (string)
+          \begin{lstlisting}[language=TeX]
+{
+  "email": "admin@unilabo.com",
+  "password": "password"
+}
+          \end{lstlisting}
+\end{document}
+
+
